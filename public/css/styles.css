@@ -105,9 +105,85 @@ nav ul {
   padding: 0;
 }
 
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px 15px;
+}
+
 footer {
   color: black;
 }
+
+#inv-display {
+  display: grid;
+  grid-template-columns: auto;
+  gap: 20px;
+  text-align: center;
+  list-style: none;
+  align-items: center;
+}
+
+#inv-display a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+#inv-display img {
+  width: 90%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+#vehicle-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.vehicle-image img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.vehicle-info {
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.vehicle-info h2 {
+  margin-top: 0;
+  color: #284B63;
+  font-size: 1.8rem;
+}
+
+.vehicle-info p {
+  margin: 10px 0;
+  color: #555;
+  line-height: 1.4;
+}
+
+.vehicle-info p strong {
+  color: #000;
+}
+
 
 @media (min-width: 768px) {
   .hero-text {
@@ -145,6 +221,25 @@ footer {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
+#inv-display {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  text-align: center;
+  list-style: none;
+  align-items: center;
+}
+
+#vehicle-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  margin: 20px 0;
+}
+
+
 
 
 }
