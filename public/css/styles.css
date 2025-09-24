@@ -184,6 +184,59 @@ footer {
   color: #000;
 }
 
+.notice {
+  background-color: #fee7e7;
+  border-left: 6px solid #f32121;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  color: #8f3131;
+  font-weight: bold;
+  list-style: none;
+}
+
+fieldset {
+  background-color: #284B63;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 20px;
+  color: white;
+}
+
+span a{
+  color: white;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"]{
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type="submit"] {
+  width: 50%;
+  background-color: #353535;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-items: center;
+}
+
+form div {
+  text-align: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
+input:required:valid {
+  border: 2px solid green;
+}
 
 @media (min-width: 768px) {
   .hero-text {
@@ -195,6 +248,15 @@ footer {
     color: #284B63;
     font-size: 24px;
   }
+
+  fieldset {
+  background-color: #284B63;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 300px 0 300px;
+  color: white;
+}
 
   .information {
     display: grid;
