@@ -56,6 +56,7 @@ app.set("layout", "layouts/layout")
  * Routes
  *************************/
 app.use(static)
+app.use(express.static("public"))
 //index route unit 3
 app.get("/", baseController.buildHome)
 app.get("/", utilities.handleErrors(baseController.buildHome))

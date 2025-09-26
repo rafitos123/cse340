@@ -1,0 +1,15 @@
+<%# Header Content %>
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <% res.redirect('/') %>
+<% } %>
+
+
+<%- messages() %>
+
+<%# Managment view %>
+<ul>
+    <li><a href="/inv/classification/add">Add Classification</a></li>
+    <li><a href="/inv/classification/add-inventory">Add Vehicle</a></li>
+</ul>

@@ -208,7 +208,8 @@ span a{
 
 input[type="text"],
 input[type="email"],
-input[type="password"]{
+input[type="password"],
+input[type="number"] {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
@@ -227,6 +228,15 @@ input[type="submit"] {
   align-items: center;
 }
 
+textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
 form div {
   text-align: center;
   justify-content: center;
@@ -236,6 +246,14 @@ form div {
 
 input:required:valid {
   border: 2px solid green;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 @media (min-width: 768px) {

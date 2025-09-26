@@ -1,0 +1,23 @@
+<%# Header Content %>
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<%- messages() %>
+
+<%# classification form %>
+
+<form action="/inv/classification/add" method="post">
+  <fieldset>
+    <label for="classificationName">Classification Name</label>
+ 
+    <input type="text" id="classificationName" name="classificationName"
+           pattern="^[A-Za-z]+$" title="Only letters allowed. No spaces or special characters."
+           required />
+    <span>NAME MUST BE ALPHABETIC CHARACTERS ONLY.</span><br>
+    <input type="submit" value="Add Classification" />
+  </fieldset>
+</form>
+ 
