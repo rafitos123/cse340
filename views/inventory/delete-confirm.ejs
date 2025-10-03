@@ -1,0 +1,48 @@
+<%# Header Content %>
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<% if (errors && errors.length > 0) { %>
+  <ul class="notice">
+    <% errors.forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<%- messages() %>
+
+<%# delete vehicle form %>
+ <form action="/inv/delete" method="POST">
+    <fieldset>
+
+      <label for="inv_make">Make</label>
+      <input type="text" name="inv_make" id="inv_make" required pattern=".{3,}" title="At least 3 characters" readonly
+        value="<%= inv_make || '' %>">
+
+      <label for="inv_model">Model</label>
+      <input type="text" name="inv_model" id="inv_model" required pattern=".{3,}" title="At least 3 characters" readonly
+        value="<%= inv_model || '' %>">
+
+      <label for="inv_year">Year</label>
+      <input type="number" name="inv_year" id="inv_year" required min="1886" max="2026" readonly
+        value="<%= inv_year || '' %>">
+
+    
+      <label for="inv_price">Price</label>
+      <input type="number" name="inv_price" id="inv_price" required step="0.01" min="0" readonly
+        value="<%= inv_price || '' %>">
+
+      
+
+           <input type="submit" value="Delete Vehicle">
+            <p>Confirm Deletion - The delete is permanent.</p>
+
+              <input type="hidden" name="inv_id"
+                <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+                <% } %>>
+
+    
