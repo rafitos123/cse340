@@ -72,13 +72,8 @@ const accountModel = require("../models/account-model")
       body("account_password")
         .trim()
         .notEmpty()
-        .withMessage("Password is required.")
-        .custom(async (account_password) => {
-          const passwordValid = await accountModel.checkPassword(account_password)
-          if (!passwordValid){
-            throw new Error("Invalid password. Please try again.")
-          }
-      }),
+        .withMessage("Password is required."),
+      
     ]
   }
 

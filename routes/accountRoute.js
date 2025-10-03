@@ -19,12 +19,17 @@ router.post(
 )
 
 
-
+// Process the login request
 router.post(
   "/login",
   regValidate.loginRules(),
   regValidate.checkLoginData,
-  utilities.handleErrors(accountController.loginAccount)
+  utilities.handleErrors(accountController.accountLogin)
 )
+
+//Logged in view
+router.get("/logged-in", utilities.handleErrors(accountController.buildLoggedIn));
+
+router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildManagement))
 
 module.exports = router;
