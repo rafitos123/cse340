@@ -142,6 +142,112 @@ async function buildLoggedIn(req, res, next) {
   })
 }
 
+/* ****************************************
+* update account information
+* *************************************** */
+async function updateProfile(req, res) {
+  let nav = await utilities.getNav()
+  const { account_id, account_firstname, account_lastname, account_email } = req.body
+  const updateResult = await accountModel.updateAccount(
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email
+  ) 
+  if (updateResult) {
+    req.flash(
+      "notice",
+      `Congratulations, you\'ve updated your profile ${account_firstname}. Please log in again.`
+    )
+    return res.status(201).redirect("/account/logged-in")
+  } else {
+    req.flash("notice", "Sorry, the update failed.")
+    return res.status(501).render("account/edit-profile", { 
+      title: "Edit Profile",
+      nav, 
+      errors: null, 
+      accountData: res.locals.accountData
+    })
+  }
+}
+
+/* ****************************************
+*  Deliver edit profile view    
+* *************************************** */
+async function buildEditProfile(req, res, next) {
+  let nav = await utilities.getNav()
+  if(!res.locals.accountData){
+    req.flash("notice", "Please log in to view your account information.")
+    res.status(403)
+    return res.redirect("/account/login")
+  }
+  res.status(200).render("account/edit-profile", {
+    title: "Edit Profile",
+    nav,
+    accountData: res.locals.accountData,
+    errors: null
+  })
+}
+
+/* ****************************************
+* uptade password
+* *************************************** */
+async function updatePassword(req, res) {
+  let nav = await utilities.getNav()
+  const { account_id, account_password } = req.body
+  // Hash the password before storing
+  let hashedPassword
+  try {
+    // regular password and cost (salt is generated automatically)
+    hashedPassword = await bcrypt.hashSync(account_password, 10)
+  } catch (error) {
+    req.flash("notice", 'Sorry, there was an error processing the password update.')
+    res.status(500).render("account/edit-profile", {
+      title: "Edit Profile",
+      nav,
+      errors: null,
+      accountData: res.locals.accountData
+    })
+  }
+  const updateResult = await accountModel.updatePassword(
+    account_id,
+    hashedPassword
+  )
+  if (updateResult) {
+    req.flash(
+      "notice",
+      `Congratulations, you\'ve updated your password. Please log in again.`
+    )
+    return res.status(201).redirect("/account/logged-in")
+  } else {
+    req.flash("notice", "Sorry, the password update failed.")
+    return res.status(501).render("account/edit-profile", {
+      title: "Edit Profile",
+      nav,
+      errors: null,
+      accountData: res.locals.accountData
+    })
+  }
+}
+
+/* ****************************************
+* deliver password update view
+* *************************************** */
+async function buildUpdatePassword(req, res, next) {
+  let nav = await utilities.getNav()
+  if(!res.locals.accountData){
+    req.flash("notice", "Please log in to view your account information.")
+    res.status(403)
+    return res.redirect("/account/login")
+  }
+  res.status(200).render("account/edit-profile", {
+    title: "Update Password",
+    nav,
+    accountData: res.locals.accountData,
+    errors: null
+  })
+}
+
 
 module.exports = { 
   buildLogin, 
@@ -149,4 +255,9 @@ module.exports = {
   registerAccount, 
   accountLogin,
   buildLoggedIn,
+  buildEditProfile,
+  updateProfile,
+  buildUpdatePassword,
+  updatePassword
+  
 }

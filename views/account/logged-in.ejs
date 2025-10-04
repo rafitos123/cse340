@@ -17,3 +17,12 @@
 <%- messages() %>
 <h1>Welcome <%= accountData.account_firstname %> <%= accountData.account_lastname %>!</h1>
 <p>You are logged in</p>
+
+<%# Edit profile %>
+<p><a href="/account/edit-profile">Edit your profile</a></p>
+
+<%# Link to inventory managment if is Admin or Employee %>
+<% if (accountData.account_type === 'Admin' || accountData.account_type === 'Employee') { %>
+  <p><a href="/inv/management">Go to Inventory Management</a></p>
+<% } %>
+

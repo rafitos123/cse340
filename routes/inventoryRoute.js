@@ -63,4 +63,6 @@ router.get("/delete/:inv_id", utilities.handleErrors(invController.deleteInvento
 router.post("/delete/", utilities.handleErrors(invController.deleteInventory))
 
 
+
+
 module.exports = router

@@ -50,6 +50,13 @@ app.use(function(req, res, next){
 // JWT Middleware
 app.use(utilities.checkJWTToken)
 
+app.use((req, res, next) => {
+  if (typeof res.locals.loggedin === "undefined") {
+    res.locals.loggedin = false
+  }
+  next()
+})
+
 /* ***********************
  * View Engine and Templates
  *************************/
