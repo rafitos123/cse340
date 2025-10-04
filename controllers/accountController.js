@@ -64,7 +64,7 @@ async function registerAccount(req, res) {
 
   if (regResult) {
     req.flash(
-      "notice",
+      "notice2",
       `Congratulations, you\'re registered ${account_firstname}. Please log in.`
     )
     res.status(201).render("account/login", {
@@ -147,26 +147,46 @@ async function buildLoggedIn(req, res, next) {
 * *************************************** */
 async function updateProfile(req, res) {
   let nav = await utilities.getNav()
+  
   const { account_id, account_firstname, account_lastname, account_email } = req.body
+  
+  const userId = account_id || res.locals.accountData.account_id 
+
   const updateResult = await accountModel.updateAccount(
-    account_id,
+    userId,
     account_firstname,
     account_lastname,
     account_email
   ) 
+
   if (updateResult) {
-    req.flash(
-      "notice",
-      `Congratulations, you\'ve updated your profile ${account_firstname}. Please log in again.`
+   
+    const updatedAccount = await accountModel.getAccountById(userId)
+    delete updatedAccount.account_password
+
+ 
+    const accessToken = jwt.sign(
+      updatedAccount,
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
     )
-    return res.status(201).redirect("/account/logged-in")
+
+    // 3. Define o novo Cookie JWT
+    res.cookie("jwt", accessToken, { 
+      httpOnly: true, 
+      secure: process.env.NODE_ENV !== "development",
+      maxAge: 3600 * 1000 
+    })
+
+    req.flash("notice2", `Profile updated successfully, ${updatedAccount.account_firstname}.`)
+    return res.status(200).redirect("/account/logged-in")
   } else {
-    req.flash("notice", "Sorry, the update failed.")
-    return res.status(501).render("account/edit-profile", { 
+    req.flash("notice", "Sorry, profile update failed.")
+    return res.status(500).render("account/edit-profile", { 
       title: "Edit Profile",
       nav, 
       errors: null, 
-      accountData: res.locals.accountData
+      accountData: req.body
     })
   }
 }
@@ -190,38 +210,48 @@ async function buildEditProfile(req, res, next) {
 }
 
 /* ****************************************
-* uptade password
+* update password
 * *************************************** */
 async function updatePassword(req, res) {
   let nav = await utilities.getNav()
   const { account_id, account_password } = req.body
-  // Hash the password before storing
-  let hashedPassword
+
   try {
-    // regular password and cost (salt is generated automatically)
-    hashedPassword = await bcrypt.hashSync(account_password, 10)
+    const hashedPassword = await bcrypt.hash(account_password, 10)
+    
+    const updateResult = await accountModel.updatePassword(account_id, hashedPassword)
+
+    if (updateResult) {
+      const updatedAccount = await accountModel.getAccountById(account_id)
+      delete updatedAccount.account_password
+
+      const accessToken = jwt.sign(
+        updatedAccount,
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1h" }
+      )
+
+      res.cookie("jwt", accessToken, { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV !== "development",
+        maxAge: 3600 * 1000 
+      })
+
+      req.flash("notice2", "Password updated successfully.")
+      return res.status(200).redirect("/account/logged-in")
+    } else {
+      req.flash("notice", "Sorry, the password update failed.")
+      return res.status(500).render("account/edit-profile", {
+        title: "Edit Profile",
+        nav,
+        errors: null,
+        accountData: res.locals.accountData
+      })
+    }
+
   } catch (error) {
-    req.flash("notice", 'Sorry, there was an error processing the password update.')
-    res.status(500).render("account/edit-profile", {
-      title: "Edit Profile",
-      nav,
-      errors: null,
-      accountData: res.locals.accountData
-    })
-  }
-  const updateResult = await accountModel.updatePassword(
-    account_id,
-    hashedPassword
-  )
-  if (updateResult) {
-    req.flash(
-      "notice",
-      `Congratulations, you\'ve updated your password. Please log in again.`
-    )
-    return res.status(201).redirect("/account/logged-in")
-  } else {
-    req.flash("notice", "Sorry, the password update failed.")
-    return res.status(501).render("account/edit-profile", {
+    req.flash("notice", "Error updating password.")
+    return res.status(500).render("account/edit-profile", {
       title: "Edit Profile",
       nav,
       errors: null,
@@ -240,13 +270,35 @@ async function buildUpdatePassword(req, res, next) {
     res.status(403)
     return res.redirect("/account/login")
   }
-  res.status(200).render("account/edit-profile", {
+  res.status(200).render("account/logged-in", {
     title: "Update Password",
     nav,
     accountData: res.locals.accountData,
     errors: null
   })
 }
+
+/* ****************************************
+* Process logout request
+* *************************************** */
+async function accountLogout(req, res) {
+  res.clearCookie("jwt"); 
+
+   req.flash("notice2", "You Loggout");
+
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error to destroy session', err);
+    }
+    
+    res.locals.loggedin = false;
+    res.locals.accountData = null;
+    
+    res.redirect("/");
+  });
+}
+
+
 
 
 module.exports = { 
@@ -255,9 +307,10 @@ module.exports = {
   registerAccount, 
   accountLogin,
   buildLoggedIn,
+  buildUpdatePassword,
+  updatePassword,
   buildEditProfile,
   updateProfile,
-  buildUpdatePassword,
-  updatePassword
+  accountLogout
   
 }

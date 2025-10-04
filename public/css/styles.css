@@ -194,6 +194,16 @@ footer {
   list-style: none;
 }
 
+.notice2 {
+  background-color: #e7feeb;
+  border-left: 6px solid #21f38a;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  color: #318f34;
+  font-weight: bold;
+  list-style: none;
+}
+
 fieldset {
   background-color: #284B63;
   border: 1px solid;

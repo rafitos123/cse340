@@ -143,15 +143,6 @@ validate.profileRules = () => {
     .isEmail()
     .normalizeEmail() // refer to validator.js docs
     .withMessage("A valid email is required.")
-    .custom(async (account_email, {req}) => {
-      const account_id = req.body.account_id
-      const emailExists = await accountModel.checkExistingEmail(account_email)
-      const currentEmail = await accountModel.getAccountByEmail(account_email)
-      if (emailExists && currentEmail.account_id != account_id){
-        throw new Error("Email exists. Please use different email")
-      }
-  }),
-
   ]
 }
 

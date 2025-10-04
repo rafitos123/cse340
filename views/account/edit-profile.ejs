@@ -17,7 +17,7 @@
 <%- messages() %>
 
 <%# Edit Profile Form %>
-<form id="editProfileForm" action="/account/logged-in" method="post">
+<form id="editProfileForm" action="/account/profile" method="post">
   <fieldset>
 
     <label for="account_firstname">First Name</label>
@@ -35,10 +35,12 @@
     
           <input type="submit" value="Update Profile">
 
+          <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+
   </fieldset>
 </form><br>
 
-<form id="changePasswordForm" action="/account/logged-in" method="post">
+<form id="changePasswordForm" action="/account/password" method="post">
   <fieldset>
 
     <label for="account_password">New Password</label>

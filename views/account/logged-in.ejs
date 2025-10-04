@@ -23,6 +23,7 @@
 
 <%# Link to inventory managment if is Admin or Employee %>
 <% if (accountData.account_type === 'Admin' || accountData.account_type === 'Employee') { %>
+  <h2>Inventory Management</h2>
   <p><a href="/inv/management">Go to Inventory Management</a></p>
 <% } %>
 

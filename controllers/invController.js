@@ -46,17 +46,27 @@ invCont.buildByVehicleId = async function (req, res, next) {
 
 invCont.buildManagementView = async (req, res, next) => {
   try {
+    const accountData = res.locals.accountData
+
+    if (!accountData || (accountData.account_type !== "Admin" && accountData.account_type !== "Employee")) {
+      req.flash("notice", "Access denied. You must be an Admin or Employee to view this page.")
+      return res.redirect("/account/logged-in")
+    }
+
     const nav = await utilities.getNav()
-     const classificationSelect = await utilities.buildClassificationList()
+    const classificationSelect = await utilities.buildClassificationList()
+
     res.render("inventory/management", {
       title: "Inventory Management",
       nav,
       classificationSelect
     })
   } catch (error) {
+    console.error("Error loading management view:", error)
     res.redirect("/")
   }
 }
+
 
 /* *******************************
  *  Build footer intentional error 
@@ -93,7 +103,7 @@ invCont.insertClassification = async function (req, res) {
   const { classificationName } = req.body
   const regResult = await invModel.insertClassification(classificationName)
   if (regResult) {
-    req.flash("notice", `The ${classificationName} classification was added successfully.`)
+    req.flash("notice2", `The ${classificationName} classification was added successfully.`)
     res.status(201).redirect("/inv/classification/add")
   } else {
     req.flash("notice", "Sorry, the registration failed. Please try again.")
@@ -164,7 +174,7 @@ invCont.insertInventory = async function (req, res) {
     });
 
     if (regResult.rowCount > 0) {
-      req.flash("notice", `The ${inv_make} ${inv_model} vehicle was added successfully.`);
+      req.flash("notice2", `The ${inv_make} ${inv_model} vehicle was added successfully.`);
       res.status(201).redirect("/inv/management");
     } else {
       throw new Error("Insert failed");
@@ -256,7 +266,7 @@ invCont.updateInventory = async function (req, res, next) {
 
   if (updateResult) {
     const itemName = updateResult.inv_make + " " + updateResult.inv_model
-    req.flash("notice", `The ${itemName} was successfully updated.`)
+    req.flash("notice2", `The ${itemName} was successfully updated.`)
     res.redirect("/inv/")
   } else {
     const classificationSelect = await utilities.buildClassificationList(classification_id)
@@ -313,7 +323,7 @@ const inv_id = parseInt(req.body.inv_id)
   const deleteResult = await invModel.deleteInventoryItem(inv_id)
 
   if (deleteResult) {
-    req.flash("notice", `The vehicle was successfully deleted.`)
+    req.flash("notice2", `The vehicle was successfully deleted.`)
     res.redirect("/inv/")
   } else {
     req.flash("notice", "Sorry, the delete failed.")
