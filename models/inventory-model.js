@@ -44,6 +44,15 @@ async function getVehicleById(inv_id) {
   }
 }
 
+/***************
+ *  Get all vehicles
+ * ************** */ 
+async function getAllVehicles() {
+  const data = await pool.query("SELECT * FROM inventory")
+  return data.rows
+}
+
+
 /******************************
  * Insert a new classification
  *****************************/
@@ -168,6 +177,7 @@ module.exports = {getClassifications,
   insertInventory,
   getInventoryById,
   updateInventory,
-  deleteInventoryItem 
+  deleteInventoryItem,
+  getAllVehicles 
 
 }

@@ -39,14 +39,6 @@ validate.inventoryRules = () => {
       .trim()
       .notEmpty()
       .withMessage("Description is required."),
-    body("inv_image")
-      .trim()
-      .notEmpty()
-      .withMessage("Image path is required."),
-    body("inv_thumbnail")
-      .trim()
-      .notEmpty()
-      .withMessage("Thumbnail path is required."),
     body("inv_price")
       .trim()
       .notEmpty()

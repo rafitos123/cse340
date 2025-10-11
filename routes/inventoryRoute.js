@@ -3,6 +3,21 @@ const router = new express.Router()
 const invController = require("../controllers/invController")
 const invValidation = require("../utilities/invValidation")
 const utilities = require("../utilities/")
+const multer = require('multer')
+const path = require('path')
+
+
+//upload images
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images/vehicles/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname))
+  }
+})
+const upload = multer({ storage: storage })
+
 
 // Inventory management view
 router.get("/", invController.buildManagementView)
@@ -23,12 +38,18 @@ router.post(
 // Show add inventory form
 router.get("/classification/add-inventory", invController.showAddInventory)
 
-// Add inventory (POST)
+// Add inventory with image upload (POST)
 router.post(
-  "/classification/add-inventory",
+  '/classification/add-inventory',
+  upload.fields([
+    { name: 'inv_image_upload', maxCount: 1 },
+    { name: 'inv_thumbnail_upload', maxCount: 1 }
+  ]),
+
   invValidation.inventoryRules(),
-  invValidation.checkInventoryData,
-  invController.insertInventory
+  invController.insertInventory,
+  invValidation.checkInventoryData
+
 )
 
 // Build inventory by classification view
@@ -45,14 +66,17 @@ router.get("/getInventory/:classification_id", utilities.handleErrors(invControl
 //edit vehicle view
 router.get("/edit/:inv_id", utilities.handleErrors(invController.editInventoryView))
 
-//update vehicle
-router.post("/update/", utilities.handleErrors(invController.updateInventory))
 
 // Edit inventory (POST)
 router.post(
-  "/edit/",
+  '/update/',
+  upload.fields([
+    { name: 'inv_image_upload', maxCount: 1 },
+    { name: 'inv_thumbnail_upload', maxCount: 1 }
+  ]),
   invValidation.inventoryRules(),
-  invValidation.checkInventoryData,
+  invValidation.checkUpdateData,
+  invController.updateInventory,
   utilities.handleErrors(invController.updateInventory)
 )
 
@@ -61,7 +85,6 @@ router.get("/delete/:inv_id", utilities.handleErrors(invController.deleteInvento
 
 // Delete vehicle (POST)
 router.post("/delete/", utilities.handleErrors(invController.deleteInventory))
-
 
 
 

@@ -1,5 +1,6 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
+const path = require("path")
 
 
 const invCont = {}
@@ -149,12 +150,21 @@ invCont.insertInventory = async function (req, res) {
     inv_model,
     inv_year,
     inv_description,
-    inv_image,
-    inv_thumbnail,
     inv_price,
     inv_miles,
     inv_color
   } = req.body;
+
+  
+  let inv_image = "/images/vehicles/no-image.png"
+  let inv_thumbnail = "/images/vehicles/no-image-tn.png"
+
+  if (req.files && req.files.inv_image_upload && req.files.inv_image_upload[0]) {
+    inv_image = "/images/vehicles/" + req.files.inv_image_upload[0].filename
+  }
+  if (req.files && req.files.inv_thumbnail_upload && req.files.inv_thumbnail_upload[0]) {
+    inv_thumbnail = "/images/vehicles/" + req.files.inv_thumbnail_upload[0].filename
+  }
 
   const nav = await utilities.getNav();
   const classificationList = await utilities.buildClassificationList(classification_id);
@@ -186,7 +196,7 @@ invCont.insertInventory = async function (req, res) {
       nav,
       classificationList,
       ...req.body,
-      errors: errors.array()
+      errors: []
     });
   }
 };
@@ -242,14 +252,23 @@ invCont.updateInventory = async function (req, res, next) {
     inv_make,
     inv_model,
     inv_description,
-    inv_image,
-    inv_thumbnail,
     inv_price,
     inv_year,
     inv_miles,
     inv_color,
     classification_id,
   } = req.body
+
+  let inv_image = req.body.inv_image 
+  let inv_thumbnail = req.body.inv_thumbnail
+
+  if (req.files && req.files.inv_image_upload && req.files.inv_image_upload[0]) {
+    inv_image = "/images/vehicles/" + req.files.inv_image_upload[0].filename
+  }
+  if (req.files && req.files.inv_thumbnail_upload && req.files.inv_thumbnail_upload[0]) {
+    inv_thumbnail = "/images/vehicles/" + req.files.inv_thumbnail_upload[0].filename
+  }
+
   const updateResult = await invModel.updateInventory(
     inv_id,  
     inv_make,

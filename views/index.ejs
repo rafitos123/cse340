@@ -1,17 +1,16 @@
 
 
 <h1>Welcome to CSE Motors!</h1>
-<%- messages() %>
+
 <div class="hero">
-     <div class="hero-text">
-        <h2>DMC Delorean</h2>
-        <p>3 Cup holders</p>
-        <p>Superman doors</p>
-        <p>Fuzzy dice!</p>
-        <br>
-        <a href="/inventory" class="btn">Own Today</a>
-    </div>  
-  <img src="../images/vehicles/delorean.jpg" alt="Image of a car">
+  <div class="hero-text">
+    <h2><%= featuredVehicle.inv_make %> <%= featuredVehicle.inv_model %></h2>
+    <p>Year: <%= featuredVehicle.inv_year %></p>
+    <p>Color: <%= featuredVehicle.inv_color %></p>
+    <br>
+    <a href="inv/detail/<%= featuredVehicle.inv_id %>" class="btn">Own Today</a>
+  </div>
+  <img src="<%= featuredVehicle.inv_image %>" alt="Image of a car">
 </div>
 
 

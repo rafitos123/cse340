@@ -16,7 +16,7 @@
 <%- messages() %>
 
 <%# add vehicle form %>
- <form action="/inv/classification/add-inventory" method="POST">
+ <form action="/inv/classification/add-inventory" method="POST" enctype="multipart/form-data">
     <fieldset>
       <label for="classificationList">Classification</label>
       <%- classificationList %>
@@ -33,17 +33,17 @@
       <input type="number" name="inv_year" id="inv_year" required min="1886" max="2026"
         value="<%= inv_year || '' %>">
 
-      <label for="inv_description">Description</label>
+      <label for="inv_description" >Description</label>
       <textarea name="inv_description" id="inv_description" required><%= inv_description || '' %></textarea>
 
-      <label for="inv_image">Image Path</label>
-      <input type="text" name="inv_image" id="inv_image" required
-        value="<%= inv_image && inv_image.trim() !== '' ? inv_image : '/images/vehicles/no-image.png' %>">
+      <p>Upload an Image if this car have</p>
+      <label for="inv_image" class="custom-upload">Upload an Image Path</label>
+      <input type="file" name="inv_image_upload" id="inv_image" accept="image/*"><br>
 
-      <label for="inv_thumbnail">Thumbnail Path</label>
-      <input type="text" name="inv_thumbnail" id="inv_thumbnail" required
-        value="<%= inv_thumbnail || inv_thumbnail.trim() !== '' ? inv_thumbnail : '/images/vehicles/no-image-tn.png' %>">
-
+      <p>Upload an Thumbnail if this car have</p>
+      <label for="inv_thumbnail" class="custom-upload">Upload a Thumbnail</label>
+       <input type="file" name="inv_thumbnail_upload" id="inv_thumbnail" accept="image/*"><br>
+       
       <label for="inv_price">Price</label>
       <input type="number" name="inv_price" id="inv_price" required step="0.01" min="0"
         value="<%= inv_price || '' %>">
